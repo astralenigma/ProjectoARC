@@ -15,11 +15,22 @@ namespace ProjectoARC
         public Form1()
         {
             InitializeComponent();
+            inicializacaoDosPartidos();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //Código onde recebe o voto escolhido.
+        }
 
+        private void inicializacaoDosPartidos()
+        {
+            int nmrPartidos = 10;
+            for (int i = 0; i <= nmrPartidos; i++)
+            {
+                comboBox1.Items.Add(i);   
+            }
+            
         }
     }
 }
