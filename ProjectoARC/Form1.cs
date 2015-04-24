@@ -22,7 +22,7 @@ namespace ProjectoARC
         {
             //Código onde recebe o voto escolhido.
         }
-
+        /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos()
         {
             int nmrPartidos = 10;
