@@ -68,6 +68,7 @@ namespace SCV
         static void teste(ProcessosComunicacao oPC)
         {
             testeDeLigacaoSRE(oPC);
+            Console.ReadLine();
         }
 
         //Método conecção
