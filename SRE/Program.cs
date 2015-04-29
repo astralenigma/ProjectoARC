@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,7 +67,7 @@ namespace SRE
             }
         }
 
-        //Método que imprime a lista no ecrã
+        //Método que imprime a lista no ecrã usado apenas para debug
         static void imprimirEleitores()
         {
             foreach (String eleitor in lista)
@@ -85,6 +87,27 @@ namespace SRE
             votando("1113441241");
             //escritorEleitores("1113441241");
             imprimirEleitores();
+        }
+
+        //Método que quando bem feito permitirá que eu arranje conecções.
+        static void coneccao()
+        {
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
+            socket.Bind(ip);
+            socket.Listen(1);
+            Console.WriteLine("Waiting...");
+            Socket socket2 = socket.Accept();
+
+            EndPoint ipep = socket2.RemoteEndPoint;
+            Console.WriteLine("Client " + ipep + " Connectado.\n");
+
+            //byte[] data = new byte[1024];
+            //string mensagemEnviada = "Bem vindo\n";
+            //data = Encoding.ASCII.GetBytes(mensagemEnviada);
+            //socket2.Send(data);
+            //receberMensagens(socket2);
+            Console.ReadLine();
         }
     }
 }
