@@ -87,10 +87,11 @@ namespace SRE
             votando("1113441241");
             //escritorEleitores("1113441241");
             imprimirEleitores();
+
         }
 
         //Método que espera pelas ligações.
-        static void esperandoLigacao()
+        static Socket esperandoLigacao()
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
@@ -103,8 +104,7 @@ namespace SRE
             Console.WriteLine("Client " + ipep + " Connectado.\n");
 
             mensageDeConfirmacaoCliente(socket2);
-
-            Console.ReadLine();
+            return socket2;
         }
         
         //Método controverso no seu uso.
@@ -116,6 +116,25 @@ namespace SRE
             socket.Send(data);
         }
 
-       
+       //Método de receber o BI para confirmação
+        static void confirmacaoBIconeccao(Socket socket)
+        {
+            
+                byte[] data = new byte[1024];
+                socket.Receive(data);
+                string mensagemRecebida = Encoding.ASCII.GetString(data);
+                votando(mensagemRecebida);
+            
+        }
+
+        //Método do ciclo da recepção das mensagens.
+        static void receberBIConeccaoCiclo(Socket socket)
+        {
+            do
+            {
+                confirmacaoBIconeccao(socket);
+            } while (socket.Connected); //This will never happen due to circunstances completely outside my power and knowledge.
+            Console.WriteLine("Cliente " + socket.RemoteEndPoint + " disconectado.\n");
+        }
     }
 }
