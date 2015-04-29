@@ -21,7 +21,7 @@ namespace SRE
         static void leitorEleitores()
         {
             string line;
-            lista=new List<String>();
+            lista = new List<String>();
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\Rui\Documents\Visual Studio 2013\Projects\ProjectoARC\SRE\lista.txt");
             while ((line = file.ReadLine()) != null)
             {
@@ -33,19 +33,20 @@ namespace SRE
         //Metodo que altera o ficheiro de texto.
         static void escritorEleitores(String votador)
         {
-            String texto="";
+            String texto = "";
             foreach (String eleitor in lista)
             {
                 String[] separador = eleitor.Split(' ');
 
-                texto += separador[0]+" ";
+                texto += separador[0] + " ";
 
                 if (separador[0] == votador)
                 {
                     texto += "1";
                 }
-                else {
-                    texto+= separador[1];
+                else
+                {
+                    texto += separador[1];
                 }
                 texto += "\n";
             }
@@ -58,7 +59,8 @@ namespace SRE
         {
             foreach (String eleitor in lista)
             {
-                if(bi == eleitor.Split(' ')[0]){
+                if (bi == eleitor.Split(' ')[0])
+                {
                     if (eleitor.Split(' ')[1] == "0")
                     {
                         escritorEleitores(bi);
@@ -80,7 +82,8 @@ namespace SRE
         }
 
         //Método de testes
-        static void teste() {
+        static void teste()
+        {
             leitorEleitores();
             imprimirEleitores();
             votando("1113441241");
@@ -108,7 +111,7 @@ namespace SRE
             mensageDeConfirmacaoCliente(socket2);
             return socket2;
         }
-        
+
         //Método controverso no seu uso.
         static void mensageDeConfirmacaoCliente(Socket socket)
         {
@@ -118,13 +121,22 @@ namespace SRE
             socket.Send(data);
         }
 
-       //Método de receber o BI para confirmação
+        //Método de receber o BI para confirmação
         static void confirmacaoBIconeccao(Socket socket)
         {
-                byte[] data = new byte[1024];
-                socket.Receive(data);
-                string mensagemRecebida = Encoding.ASCII.GetString(data);
-                votando(mensagemRecebida);
+            byte[] data = new byte[1024];
+            socket.Receive(data);
+            string mensagemRecebida = Encoding.ASCII.GetString(data);
+            mensagemRecebida = mensagemRecebida.Replace("\0","");
+            if (votando(mensagemRecebida))
+            {
+                data = Encoding.ASCII.GetBytes("Ok");
+            }
+            else
+            {
+                data = Encoding.ASCII.GetBytes("Fail");
+            }
+            socket.Send(data);
         }
 
         //Método do ciclo da recepção das mensagens.
