@@ -13,9 +13,15 @@ namespace SRE
         private static List<String> lista;
         static void Main(string[] args)
         {
+            inicializacao();
             //teste();
             Socket socket = esperandoLigacao();
             receberBIConeccaoCiclo(socket);
+        }
+
+        private static void inicializacao()
+        {
+            leitorEleitores();
         }
 
 
