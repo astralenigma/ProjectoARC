@@ -54,7 +54,7 @@ namespace SRE
         }
 
         //Metodo de verificacao de votacao
-        static void votando(String bi)
+        static Boolean votando(String bi)
         {
             foreach (String eleitor in lista)
             {
@@ -62,9 +62,11 @@ namespace SRE
                     if (eleitor.Split(' ')[1] == "0")
                     {
                         escritorEleitores(bi);
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         //Método que imprime a lista no ecrã usado apenas para debug
@@ -119,12 +121,10 @@ namespace SRE
        //Método de receber o BI para confirmação
         static void confirmacaoBIconeccao(Socket socket)
         {
-            
                 byte[] data = new byte[1024];
                 socket.Receive(data);
                 string mensagemRecebida = Encoding.ASCII.GetString(data);
                 votando(mensagemRecebida);
-            
         }
 
         //Método do ciclo da recepção das mensagens.
