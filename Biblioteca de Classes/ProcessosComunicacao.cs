@@ -20,15 +20,13 @@ namespace BibliotecaDeClasses
             string mensagem = "";
             do
             {
-                mensagem = enviarMensagem();
+                mensagem = enviarMensagem(Console.ReadLine());
             } while (mensagem != "exit");
 
         }
 
-        public String enviarMensagem()
+        public String enviarMensagem(string mensagem)
         {
-            string mensagem = "";
-            mensagem = Console.ReadLine()+"\n";
             byte[] data = new byte[1024];
             data = Encoding.ASCII.GetBytes(mensagem);
             socket.Send(data);
