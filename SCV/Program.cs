@@ -21,9 +21,9 @@ namespace SCV
             inicializacao();
             //Ligação ao SRE
             ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
-            if(oPC.receberMensagem()=="OK")
+            if (oPC.receberMensagem() == "OK")
                 Console.WriteLine("Ligação Bem sucedida");
-            testeDeLigacaoSRE(oPC);
+            teste(oPC);
 
             //Ligações dos TRVs
 
@@ -65,8 +65,9 @@ namespace SCV
         }
 
         //Método de testes da praxe.
-        static void teste() { 
-
+        static void teste(ProcessosComunicacao oPC)
+        {
+            testeDeLigacaoSRE(oPC);
         }
 
         //Método conecção
