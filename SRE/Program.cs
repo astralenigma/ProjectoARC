@@ -13,7 +13,9 @@ namespace SRE
         private static List<String> lista;
         static void Main(string[] args)
         {
-            teste();
+            //teste();
+            Socket socket = esperandoLigacao();
+            receberBIConeccaoCiclo(socket);
         }
 
 
@@ -127,14 +129,16 @@ namespace SRE
             byte[] data = new byte[1024];
             socket.Receive(data);
             string mensagemRecebida = Encoding.ASCII.GetString(data);
-            mensagemRecebida = mensagemRecebida.Replace("\0","");
+            mensagemRecebida = mensagemRecebida.Replace("\0", "");
             if (votando(mensagemRecebida))
             {
                 data = Encoding.ASCII.GetBytes("Ok");
+                Console.WriteLine("Ok");//check
             }
             else
             {
                 data = Encoding.ASCII.GetBytes("Fail");
+                Console.WriteLine("Fail");//check
             }
             socket.Send(data);
         }
