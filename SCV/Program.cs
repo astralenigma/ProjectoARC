@@ -20,12 +20,24 @@ namespace SCV
         {
             inicializacao();
             //Ligação ao SRE
-            conectar("127.0.0.1");//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
+            ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
+            if(oPC.receberMensagem()=="OK")
+                Console.WriteLine("Ligação Bem sucedida");
+            testeDeLigacaoSRE(oPC);
 
-            
             //Ligações dos TRVs
 
 
+        }
+
+        private static void testeDeLigacaoSRE(ProcessosComunicacao oPC)
+        {
+            oPC.enviarMensagem(" ");
+            Console.WriteLine(oPC.receberMensagem());
+            oPC.enviarMensagem("1113441241");
+            Console.WriteLine(oPC.receberMensagem());
+            oPC.enviarMensagem("1113441241");
+            Console.WriteLine(oPC.receberMensagem());
         }
 
         //Método de incrementação de votos em branco.
