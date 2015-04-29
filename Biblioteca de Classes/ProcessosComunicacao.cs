@@ -43,13 +43,13 @@ namespace BibliotecaDeClasses
             } while (socket.Connected);
         }
 
-        public void receberMensagem()
+        public String receberMensagem()
         {
             byte[] data = new byte[1024];
             socket.Receive(data);
             string mensagemRecebida = Encoding.ASCII.GetString(data);
             mensagemRecebida=mensagemRecebida.Replace("\0", "");
-            Console.Write(mensagemRecebida);
+            return mensagemRecebida;
         }
     }
 }
