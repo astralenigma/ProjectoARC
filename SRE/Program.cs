@@ -89,8 +89,8 @@ namespace SRE
             imprimirEleitores();
         }
 
-        //Método que quando bem feito permitirá que eu arranje conecções.
-        static void coneccao()
+        //Método que espera pelas ligações.
+        static void esperandoLigacao()
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
@@ -102,12 +102,20 @@ namespace SRE
             EndPoint ipep = socket2.RemoteEndPoint;
             Console.WriteLine("Client " + ipep + " Connectado.\n");
 
-            //byte[] data = new byte[1024];
-            //string mensagemEnviada = "Bem vindo\n";
-            //data = Encoding.ASCII.GetBytes(mensagemEnviada);
-            //socket2.Send(data);
-            //receberMensagens(socket2);
+            mensageDeConfirmacaoCliente(socket2);
+
             Console.ReadLine();
         }
+        
+        //Método controverso no seu uso.
+        static void mensageDeConfirmacaoCliente(Socket socket)
+        {
+            byte[] data = new byte[1024];
+            string mensagemEnviada = "Ok";
+            data = Encoding.ASCII.GetBytes(mensagemEnviada);
+            socket.Send(data);
+        }
+
+       
     }
 }
