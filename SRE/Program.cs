@@ -79,30 +79,6 @@ namespace SRE
             return false;
         }
 
-        //Método que imprime a lista no ecrã usado apenas para debug
-        static void imprimirEleitores()
-        {
-            foreach (String eleitor in lista)
-            {
-                System.Console.WriteLine(eleitor);
-            }
-            Console.ReadLine();
-        }
-
-        //Método de testes
-        static void teste()
-        {
-            leitorEleitores();
-            imprimirEleitores();
-            votando("1113441241");
-            //escritorEleitores("1113441241");
-            imprimirEleitores();
-            votando("1113441241");
-            //escritorEleitores("1113441241");
-            imprimirEleitores();
-
-        }
-
         //Método que espera pelas ligações.
         static Socket esperandoLigacao()
         {
@@ -120,22 +96,13 @@ namespace SRE
             return socket2;
         }
 
-        //Método controverso no seu uso.
-        static void mensageDeConfirmacaoCliente(Socket socket)
-        {
-            byte[] data = new byte[1024];
-            string mensagemEnviada = "Ok";
-            data = Encoding.ASCII.GetBytes(mensagemEnviada);
-            socket.Send(data);
-        }
-
         //Método de receber o BI para confirmação
         static void confirmacaoBIconeccao(Socket socket)
         {
             byte[] data = new byte[1024];
             socket.Receive(data);
             string mensagemRecebida = Encoding.ASCII.GetString(data);
-            mensagemRecebida = mensagemRecebida.Replace("\0", "");
+            mensagemRecebida = mensagemRecebida.Replace("\0", "");//Limpar os bits nulos.
             if (votando(mensagemRecebida))
             {
                 data = Encoding.ASCII.GetBytes("Ok");
@@ -158,5 +125,39 @@ namespace SRE
             } while (socket.Connected); //This will never happen due to circunstances completely outside my power and knowledge.
             Console.WriteLine("Cliente " + socket.RemoteEndPoint + " disconectado.\n");
         }
+
+        //Método de testes
+        static void teste()
+        {
+            leitorEleitores();
+            imprimirEleitores();
+            votando("1113441241");
+            //escritorEleitores("1113441241");
+            imprimirEleitores();
+            votando("1113441241");
+            //escritorEleitores("1113441241");
+            imprimirEleitores();
+
+        }
+
+        //Método controverso no seu uso.
+        static void mensageDeConfirmacaoCliente(Socket socket)
+        {
+            byte[] data = new byte[1024];
+            string mensagemEnviada = "Ok";
+            data = Encoding.ASCII.GetBytes(mensagemEnviada);
+            socket.Send(data);
+        }
+
+        //Método que imprime a lista no ecrã usado apenas para debug
+        static void imprimirEleitores()
+        {
+            foreach (String eleitor in lista)
+            {
+                System.Console.WriteLine(eleitor);
+            }
+            Console.ReadLine();
+        }
+
     }
 }
