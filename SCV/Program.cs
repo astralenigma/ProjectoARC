@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SCV
@@ -26,20 +27,20 @@ namespace SCV
             teste(oPC);
 
             //Ligações dos TRVs
-
+            //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
+            TcpListener serverSocket = new TcpListener(8888);
+            TcpClient clientSocket = default(TcpClient);
+            //A partir daqui começa a fazer algum sentido
+            while (true)
+            {
+                clientSocket = serverSocket.AcceptTcpClient();
+                handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada
+                client.startClient(clientSocket);//Loucura de código.
+            }
 
         }
 
-        private static void testeDeLigacaoSRE(ProcessosComunicacao oPC)
-        {
-            oPC.enviarMensagem(" ");
-            Console.WriteLine(oPC.receberMensagem());
-            oPC.enviarMensagem("1113441241");
-            Console.WriteLine(oPC.receberMensagem());
-            oPC.enviarMensagem("1113441241");
-            Console.WriteLine(oPC.receberMensagem());
-        }
-
+        
         //Método de incrementação de votos em branco.
         static void incrementarVotoBranco()
         {
@@ -64,13 +65,6 @@ namespace SCV
             contagemVotos[partido]++;
         }
 
-        //Método de testes da praxe.
-        static void teste(ProcessosComunicacao oPC)
-        {
-            testeDeLigacaoSRE(oPC);
-            Console.ReadLine();
-        }
-
         //Método conecção
         static Socket conectar(String ipStr)
         {
@@ -83,5 +77,45 @@ namespace SCV
             return socket;
         }
 
+        public class handleTRV
+        {
+            TcpClient clientSocket;
+            public void startClient(TcpClient inClientSocket)
+            {
+                this.clientSocket = inClientSocket;
+
+                Thread ctThread = new Thread(doVoto);
+                ctThread.Start();
+            }
+
+            private void doVoto()
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(" >> " + ex.ToString());
+                }
+            }
+        }
+
+        private static void testeDeLigacaoSRE(ProcessosComunicacao oPC)
+        {
+            oPC.enviarMensagem(" ");
+            Console.WriteLine(oPC.receberMensagem());
+            oPC.enviarMensagem("1113441241");
+            Console.WriteLine(oPC.receberMensagem());
+            oPC.enviarMensagem("1113441241");
+            Console.WriteLine(oPC.receberMensagem());
+        }
+
+        //Método de testes da praxe.
+        static void teste(ProcessosComunicacao oPC)
+        {
+            testeDeLigacaoSRE(oPC);
+            Console.ReadLine();
+        }
     }
 }
