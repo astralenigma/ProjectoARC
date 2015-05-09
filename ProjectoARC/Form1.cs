@@ -34,6 +34,16 @@ namespace ProjectoARC
             serverStream.Read(inStream, 0, (int)clientSocket.ReceiveBufferSize);
             string returndata = System.Text.Encoding.ASCII.GetString(inStream);
             
+            //Apagar o input e mostrar o resultado.
+            label3.Text = returndata;
+            //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle.
+            label3.Visible = !false;
+            button2.Visible = !false;
+            button1.Visible = !true;
+            comboBox1.Visible = !true;
+            textBox1.Visible = !true;
+            label1.Visible = !true;
+            label2.Visible = !true;
         }
         /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos()
