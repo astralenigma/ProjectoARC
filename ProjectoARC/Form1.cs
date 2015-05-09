@@ -36,14 +36,8 @@ namespace ProjectoARC
             
             //Apagar o input e mostrar o resultado.
             label3.Text = returndata;
-            //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle.
-            label3.Visible = !false;
-            button2.Visible = !false;
-            button1.Visible = !true;
-            comboBox1.Visible = !true;
-            textBox1.Visible = !true;
-            label1.Visible = !true;
-            label2.Visible = !true;
+            //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
+            toggleVisibilidade();
         }
         /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos()
@@ -65,13 +59,19 @@ namespace ProjectoARC
         //Método do botão da mensagem.
         private void button2_Click(object sender, EventArgs e)
         {
-            label3.Visible = false;
-            button2.Visible = false;
-            button1.Visible = true;
-            comboBox1.Visible = true;
-            textBox1.Visible = true;
-            label1.Visible=true;
-            label2.Visible = true;
+            toggleVisibilidade();
+        }
+
+        //Método que troca a visiblidade das mensagens. Eu tentei impedir isto mas cada vez mais soou como uma boa ideia.
+        private void toggleVisibilidade()
+        {
+            label3.Visible = !label3.Visible;
+            button2.Visible = !button2.Visible;
+            button1.Visible = !button1.Visible;
+            comboBox1.Visible = !comboBox1.Visible;
+            textBox1.Visible = !textBox1.Visible;
+            label1.Visible = !label1.Visible;
+            label2.Visible = !label2.Visible;
         }
     }
 }
