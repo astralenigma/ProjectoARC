@@ -11,7 +11,7 @@ namespace ProjectoARC
 {
     static class Program
     {
-        const int PORTA = 6000;
+        const int PORTA = 8888;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
