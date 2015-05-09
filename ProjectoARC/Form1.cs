@@ -30,7 +30,7 @@ namespace ProjectoARC
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
 
-            byte[] inStream = new byte[1025];
+            byte[] inStream = new byte[1024];
             serverStream.Read(inStream, 0, (int)clientSocket.ReceiveBufferSize);
             string returndata = System.Text.Encoding.ASCII.GetString(inStream);
             
@@ -50,6 +50,18 @@ namespace ProjectoARC
         {
             clientSocket.Connect("127.0.0.1", 8888);
 
+        }
+
+        //Método do botão da mensagem.
+        private void button2_Click(object sender, EventArgs e)
+        {
+            label3.Visible = false;
+            button2.Visible = false;
+            button1.Visible = true;
+            comboBox1.Visible = true;
+            textBox1.Visible = true;
+            label1.Visible=true;
+            label2.Visible = true;
         }
     }
 }
