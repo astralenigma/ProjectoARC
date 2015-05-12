@@ -45,7 +45,7 @@ namespace ProjectoARC
             int nmrPartidos = 10;
             for (int i = 0; i <= nmrPartidos; i++)
             {
-                comboBox1.Items.Add(i);   
+                comboBox1.Items.Add(i);
             }
             
         }
