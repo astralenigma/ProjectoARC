@@ -42,7 +42,7 @@ namespace ProjectoARC
         /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos()
         {
-            int nmrPartidos = 10;
+            int nmrPartidos = 9;
             for (int i = 0; i <= nmrPartidos; i++)
             {
                 comboBox1.Items.Add(i);
