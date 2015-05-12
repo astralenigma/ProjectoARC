@@ -63,7 +63,7 @@ namespace SRE
         }
 
         //Metodo de verificacao de votacao
-        static Boolean votando(String bi)
+        static int votando(String bi)
         {
             foreach (String eleitor in lista)
             {
@@ -72,11 +72,15 @@ namespace SRE
                     if (eleitor.Split(' ')[1] == "0")
                     {
                         escritorEleitores(bi);
-                        return true;
+                        return 0;
+                    }
+                    else
+                    {
+                        return 1;
                     }
                 }
             }
-            return false;
+            return 2;
         }
 
         //Método que espera pelas ligações.
@@ -103,15 +107,21 @@ namespace SRE
             socket.Receive(data);
             string mensagemRecebida = Encoding.ASCII.GetString(data);
             mensagemRecebida = mensagemRecebida.Replace("\0", "");//Limpar os bits nulos.
-            if (votando(mensagemRecebida))
+            switch (votando(mensagemRecebida))
             {
-                data = Encoding.ASCII.GetBytes("Ok");
-                Console.WriteLine("Ok");//check
-            }
-            else
-            {
-                data = Encoding.ASCII.GetBytes("Fail");
-                Console.WriteLine("Fail");//check
+                case 0:
+                    data = Encoding.ASCII.GetBytes("Ok");
+                    Console.WriteLine("Ok");//check
+                    break;
+                case 1:
+                    data = Encoding.ASCII.GetBytes("BI Usado");
+                    Console.WriteLine("BI Usado");//check
+                    break;
+                case 2:
+                    data = Encoding.ASCII.GetBytes("BI Nao Encontrado");
+                    Console.WriteLine("BI Nao Encontrado");//check
+                    break;
+                
             }
             socket.Send(data);
         }
