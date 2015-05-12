@@ -28,14 +28,15 @@ namespace SCV
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
-            TcpListener serverSocket = new TcpListener(8888);
+            TcpListener serverSocket = new TcpListener(IPAddress.Any,8888);
             TcpClient clientSocket = default(TcpClient);
             //A partir daqui começa a fazer algum sentido
             while (true)
             {
-                clientSocket = serverSocket.AcceptTcpClient();
+                //A partir daqui todo o sentido é perdido.
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada
-                client.startClient(clientSocket,oPC);//Loucura de código.
+                client.startClient(clientSocket, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo.
+                clientSocket = serverSocket.AcceptTcpClient();
             }
 
         }
