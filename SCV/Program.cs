@@ -24,7 +24,7 @@ namespace SCV
             ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
             if (oPC.receberMensagem() == "OK")
                 Console.WriteLine("Ligação Bem sucedida");
-            teste(oPC);
+            //teste(oPC);
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
