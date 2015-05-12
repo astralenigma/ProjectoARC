@@ -35,7 +35,7 @@ namespace SCV
             {
                 clientSocket = serverSocket.AcceptTcpClient();
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada
-                client.startClient(clientSocket);//Loucura de código.
+                client.startClient(clientSocket,oPC);//Loucura de código.
             }
 
         }
@@ -80,9 +80,11 @@ namespace SCV
         public class handleTRV
         {
             TcpClient clientSocket;
-            public void startClient(TcpClient inClientSocket)
+            ProcessosComunicacao cliPC;
+            public void startClient(TcpClient inClientSocket, ProcessosComunicacao cliPC)
             {
                 this.clientSocket = inClientSocket;
+                this.cliPC = cliPC;
 
                 Thread ctThread = new Thread(doVoto);
                 ctThread.Start();
@@ -90,9 +92,28 @@ namespace SCV
 
             private void doVoto()
             {
+
+                Boolean erro = false;
                 try
                 {
-
+                    do
+                    {
+                        
+                        cliPC.enviarMensagem("");
+                        erro = false;
+                        int switch_on=0;//placeholder for amazing things.
+                        switch (switch_on)
+                        {
+                            //Se o BI falhar mandar aviso
+                            case 1://ESSE BI NÃO EXISTE.
+                            //Se o BI já tiver sido usado mandar aviso
+                            case 2://ESSE BI JÁ FOI USADO.
+                            //Se tudo funcionar mandar que está tudo bem.
+                            default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
+                                break;
+                        }
+ 
+                    } while (erro);
                 }
                 catch (Exception ex)
                 {
