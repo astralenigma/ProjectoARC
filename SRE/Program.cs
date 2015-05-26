@@ -154,7 +154,7 @@ namespace SRE
         static void mensageDeConfirmacaoCliente(Socket socket)
         {
             byte[] data = new byte[1024];
-            string mensagemEnviada = "Ok";
+            string mensagemEnviada = "OK";
             data = Encoding.ASCII.GetBytes(mensagemEnviada);
             socket.Send(data);
         }
