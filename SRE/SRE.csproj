@@ -48,7 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lista.txt" />
+    <Content Include="lista.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Biblioteca de Classes\BibliotecaDeClasses.csproj">

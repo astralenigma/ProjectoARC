@@ -30,7 +30,7 @@ namespace SRE
         {
             string line;
             lista = new List<String>();
-            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\Rui\Documents\Visual Studio 2013\Projects\ProjectoARC\SRE\lista.txt");
+            System.IO.StreamReader file = new System.IO.StreamReader(@"lista.txt");
             while ((line = file.ReadLine()) != null)
             {
                 lista.Add(line);
