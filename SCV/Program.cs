@@ -23,7 +23,8 @@ namespace SCV
             //Ligação ao SRE
             ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
             if (oPC.receberMensagem() == "OK")
-                Console.WriteLine("Ligação Bem sucedida");
+                Console.WriteLine("Ligação Bem sucedida.\n"+
+            "Conectado ao Servidor de Recenseamento Eleitoral em "+oPC.remoteEndPoint()+".");
             //teste(oPC);
 
             //Ligações dos TRVs

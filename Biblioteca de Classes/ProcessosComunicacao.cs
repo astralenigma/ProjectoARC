@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
 
 namespace BibliotecaDeClasses
 {
@@ -48,6 +49,11 @@ namespace BibliotecaDeClasses
             string mensagemRecebida = Encoding.ASCII.GetString(data);
             mensagemRecebida=mensagemRecebida.Replace("\0", "");
             return mensagemRecebida;
+        }
+
+        public EndPoint remoteEndPoint()
+        {
+            return socket.RemoteEndPoint;
         }
     }
 }
