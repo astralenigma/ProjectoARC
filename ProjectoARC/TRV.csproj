@@ -7,8 +7,8 @@
     <ProjectGuid>{1A81B8D0-FDB6-4456-B59C-573D8883B219}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProjectoARC</RootNamespace>
-    <AssemblyName>ProjectoARC</AssemblyName>
+    <RootNamespace>TRV</RootNamespace>
+    <AssemblyName>TRV</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -63,6 +63,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
