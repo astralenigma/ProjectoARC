@@ -13,8 +13,8 @@ namespace ProjectoARC
 {
     public partial class Form1 : Form
     {
-        System.Net.Sockets.TcpClient clientSocket = new System.Net.Sockets.TcpClient();
-        NetworkStream serverStream;
+        Socket clientSocket = new System.Net.Sockets.Socket(SocketType.Dgram, ProtocolType.IP);
+        //NetworkStream serverStream;
 
         public Form1()
         {
@@ -25,17 +25,23 @@ namespace ProjectoARC
         private void button1_Click(object sender, EventArgs e)
         {
             //Código onde recebe o voto escolhido.
-            NetworkStream serverStream = clientSocket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("Message from Client$");
-            serverStream.Write(outStream, 0, outStream.Length);
-            serverStream.Flush();
+            clientSocket.Connect("127.0.0.1", 8888);
+            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
+            //mais automático com menos necessidade de um programador a fuçar no código
+            
+            //Aqui ele envia a informação do utilizador.
+            String informacao = textBox1 + " " + comboBox1.SelectedItem;
+            byte[] mensagemAEnviar = System.Text.Encoding.ASCII.GetBytes(informacao);
+            clientSocket.Send(mensagemAEnviar);
 
-            byte[] inStream = new byte[1024];
-            serverStream.Read(inStream, 0, (int)clientSocket.ReceiveBufferSize);
-            string returndata = System.Text.Encoding.ASCII.GetString(inStream);
+            //Aqui ele recebe a resposta não quer dizer que ele goste dela.
+            byte[] mensagemAReceber = new byte[1024];
+            clientSocket.Receive(mensagemAReceber);
+            string returndata = System.Text.Encoding.ASCII.GetString(mensagemAReceber);
             
             //Apagar o input e mostrar o resultado.
             label3.Text = returndata;
+            limparCampos();
             //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
             toggleVisibilidade();
         }
@@ -48,12 +54,6 @@ namespace ProjectoARC
                 comboBox1.Items.Add(i);
             }
             
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            clientSocket.Connect("127.0.0.1", 8888);
-
         }
 
         //Método do botão da mensagem.
@@ -72,6 +72,12 @@ namespace ProjectoARC
             textBox1.Visible = !textBox1.Visible;
             label1.Visible = !label1.Visible;
             label2.Visible = !label2.Visible;
+        }
+
+        //Método que limpa os campos de input
+        private void limparCampos()
+        {
+            textBox1.Clear();
         }
     }
 }
