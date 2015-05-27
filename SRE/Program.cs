@@ -58,7 +58,7 @@ namespace SRE
                 }
                 texto += "\n";
             }
-            System.IO.File.WriteAllText(@"C:\Users\Rui\Documents\Visual Studio 2013\Projects\ProjectoARC\SRE\lista.txt", texto);
+            System.IO.File.WriteAllText(@"lista.txt", texto);
             leitorEleitores();
         }
 
