@@ -106,11 +106,9 @@ namespace SCV
                 Boolean erro = false;
                 try
                 {
-                    String[] mensagem = cliPC.receberMensagem().Split(' ');
-                    
                     do
                     {
-                        
+                        String[] mensagem = cliPC.receberMensagem().Split(' ');
                         
                         erro = false;
                         int switch_on=0;//placeholder for amazing things.
