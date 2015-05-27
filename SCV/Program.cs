@@ -110,9 +110,11 @@ namespace SCV
                         {
                             //Se o BI falhar mandar aviso
                             case 1://ESSE BI NÃO EXISTE.
+                                erro = true;
                             //Se o BI já tiver sido usado mandar aviso
                                 break;
                             case 2://ESSE BI JÁ FOI USADO.
+                                erro = true;
                             //Se tudo funcionar mandar que está tudo bem.
                                 break;
                             default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
