@@ -25,10 +25,7 @@ namespace ProjectoARC
         private void button1_Click(object sender, EventArgs e)
         {
             //Código onde recebe o voto escolhido.
-            clientSocket.Connect("127.0.0.1", 8888);
-            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
-            //mais automático com menos necessidade de um programador a fuçar no código
-            
+
             //Aqui ele envia a informação do utilizador.
             String informacao = textBox1.Text + " " + comboBox1.SelectedItem;
             byte[] mensagemAEnviar = System.Text.Encoding.ASCII.GetBytes(informacao);
@@ -44,7 +41,6 @@ namespace ProjectoARC
             limparCampos();
             //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
             toggleVisibilidade();
-            clientSocket.Disconnect(true);
         }
         /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos()
@@ -83,7 +79,9 @@ namespace ProjectoARC
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            clientSocket.Connect("127.0.0.1", 8888);
+            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
+            //mais automático com menos necessidade de um programador a fuçar no código
         }
     }
 }
