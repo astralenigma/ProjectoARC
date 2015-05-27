@@ -29,16 +29,16 @@ namespace SCV
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
-            TcpListener serverSocket = new TcpListener(IPAddress.Any,8888);
-            serverSocket.Start(10);
-            TcpClient clientSocket = default(TcpClient);
-            //A partir daqui começa a fazer algum sentido
+            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Unknown, ProtocolType.IP);
+            serverSocket.Listen(10);
+            Socket clientSocket;
+            //A partir daqui começa a fazer algum sentido.
             while (true)
             {
                 //A partir daqui todo o sentido é perdido.
-                handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada
-                client.startClient(clientSocket, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo.
-                clientSocket = serverSocket.AcceptTcpClient();
+                handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
+                clientSocket = serverSocket.Accept();
+                client.startClient(clientSocket, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
                 Console.WriteLine("Cliente recebido.");
             }
 
@@ -89,12 +89,12 @@ namespace SCV
 
         public class handleTRV
         {
-            TcpClient clientSocket;
-            ProcessosComunicacao cliPC;
-            public void startClient(TcpClient inClientSocket, ProcessosComunicacao cliPC)
+            Socket clientSocket;
+            ProcessosComunicacao srePC;
+            public void startClient(Socket inClientSocket, ProcessosComunicacao srePC)
             {
                 this.clientSocket = inClientSocket;
-                this.cliPC = cliPC;
+                this.srePC = srePC;
 
                 Thread ctThread = new Thread(doVoto);
                 ctThread.Start();
@@ -108,7 +108,8 @@ namespace SCV
                 {
                     do
                     {
-                        String[] mensagem = cliPC.receberMensagem().Split(' ');
+                        //clientSocket.re
+                        //String[] mensagem = Split(' ');
                         
                         erro = false;
                         int switch_on=0;//placeholder for amazing things.
@@ -117,17 +118,17 @@ namespace SCV
                             //Se o BI falhar mandar aviso
                             case 1://ESSE BI NÃO EXISTE.
                                 erro = true;
-                                cliPC.enviarMensagem("O número do cartão do CC ou Eleitor que enviou não está na lista.");
+                                srePC.enviarMensagem("O número do cartão do CC ou Eleitor que enviou não está na lista.");
                             //Se o BI já tiver sido usado mandar aviso
                                 break;
                             case 2://ESSE BI JÁ FOI USADO.
                                 erro = true;
-                                cliPC.enviarMensagem("O número de eleitor que usou já foi usado.");
+                                srePC.enviarMensagem("O número de eleitor que usou já foi usado.");
                             //Se tudo funcionar mandar que está tudo bem.
                                 break;
                             default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
                                 incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
-                                cliPC.enviarMensagem("Alteração bem sucedida.");
+                                srePC.enviarMensagem("Alteração bem sucedida.");
                                 break;
                         }
  
