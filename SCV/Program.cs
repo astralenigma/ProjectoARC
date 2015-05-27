@@ -122,21 +122,29 @@ namespace SCV
                             //Se o BI falhar mandar aviso
                             case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
                                 erro = true;
-                                cliPC.enviarMensagem("O número do cartão do CC ou Eleitor que enviou não está na lista.");
+                                cliPC.enviarMensagem("1");
                             //Se o BI já tiver sido usado mandar aviso
                                 break;
                             case "BI Usado"://ESSE BI JÁ FOI USADO.
                                 erro = true;
-                                cliPC.enviarMensagem("O número de eleitor que usou já foi usado.");
+                                cliPC.enviarMensagem("2");
                             //Se tudo funcionar mandar que está tudo bem.
                                 break;
                             default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
                                 incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
-                                cliPC.enviarMensagem("Alteração bem sucedida.");
+                                cliPC.enviarMensagem("3");
                                 break;
                         }
  
                     } while (erro);
+                    
+                }
+                catch (ObjectDisposedException ex) {
+                    cliPC.enviarMensagem("4");
+                }
+                catch (SocketException ex)
+                {
+                    Console.WriteLine(ex.ErrorCode);
                 }
                 catch (Exception ex)
                 {
