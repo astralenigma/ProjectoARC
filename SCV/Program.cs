@@ -111,7 +111,7 @@ namespace SCV
                     do
                     {
                         
-                        cliPC.enviarMensagem("");
+                        
                         erro = false;
                         int switch_on=0;//placeholder for amazing things.
                         switch (switch_on)
@@ -119,13 +119,17 @@ namespace SCV
                             //Se o BI falhar mandar aviso
                             case 1://ESSE BI NÃO EXISTE.
                                 erro = true;
+                                cliPC.enviarMensagem("O número do cartão do CC ou Eleitor que enviou não está na lista.");
                             //Se o BI já tiver sido usado mandar aviso
                                 break;
                             case 2://ESSE BI JÁ FOI USADO.
                                 erro = true;
+                                cliPC.enviarMensagem("O número de eleitor que usou já foi usado.");
                             //Se tudo funcionar mandar que está tudo bem.
                                 break;
                             default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
+                                incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
+                                cliPC.enviarMensagem("Alteração bem sucedida.");
                                 break;
                         }
  
