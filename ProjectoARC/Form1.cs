@@ -25,12 +25,12 @@ namespace ProjectoARC
         private void button1_Click(object sender, EventArgs e)
         {
             //Código onde recebe o voto escolhido.
-            clientSocket.Connect("127.0.0.1", 8888);
+            
             //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
             //mais automático com menos necessidade de um programador a fuçar no código
             
             //Aqui ele envia a informação do utilizador.
-            String informacao = textBox1 + " " + comboBox1.SelectedItem;
+            String informacao = textBox1.Text + " " + comboBox1.SelectedItem;
             byte[] mensagemAEnviar = System.Text.Encoding.ASCII.GetBytes(informacao);
             clientSocket.Send(mensagemAEnviar);
 
@@ -78,6 +78,11 @@ namespace ProjectoARC
         private void limparCampos()
         {
             textBox1.Clear();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            clientSocket.Connect("127.0.0.1", 8888);
         }
     }
 }
