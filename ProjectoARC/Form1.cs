@@ -8,18 +8,18 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using BibliotecaDeClasses;
 namespace ProjectoARC
 {
     public partial class Form1 : Form
     {
         Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        //NetworkStream serverStream;
-
+        ProcessosComunicacao oPC;
         public Form1()
         {
             InitializeComponent();
             inicializacaoDosPartidos();
+            oPC = new ProcessosComunicacao(clientSocket);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -27,17 +27,12 @@ namespace ProjectoARC
             //Código onde recebe o voto escolhido.
 
             //Aqui ele envia a informação do utilizador.
-            String informacao = textBox1.Text + " " + comboBox1.SelectedItem;
-            byte[] mensagemAEnviar = System.Text.Encoding.ASCII.GetBytes(informacao);
-            clientSocket.Send(mensagemAEnviar);
-
-            //Aqui ele recebe a resposta não quer dizer que ele goste dela.
-            byte[] mensagemAReceber = new byte[1024];
-            clientSocket.Receive(mensagemAReceber);
-            string returndata = System.Text.Encoding.ASCII.GetString(mensagemAReceber);
+            oPC.enviarMensagem(textBox1.Text + " " + comboBox1.SelectedItem);
             
+            //Aqui ele recebe a resposta não quer dizer que ele goste dela.
+            mensagens(oPC.receberMensagem());
             //Apagar o input e mostrar o resultado.
-            label3.Text = returndata;
+
             limparCampos();
             //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
             toggleVisibilidade();
@@ -50,7 +45,7 @@ namespace ProjectoARC
             {
                 comboBox1.Items.Add(i);
             }
-            
+
         }
 
         //Método do botão da mensagem.
@@ -76,7 +71,30 @@ namespace ProjectoARC
         {
             textBox1.Clear();
         }
-
+        private void mensagens(String mensagemRecebida)
+        {
+            switch (mensagemRecebida)
+            {
+                case "1":
+                    label3.Text = "O número do cartão do CC ou BI que enviou não está na lista.";
+                    break;
+                case "2":
+                    label3.Text = "O número do cartão do CC ou BI que usou já foi usado.";
+                    break;
+                case "3":
+                    label3.Text = "Votação bem sucedida.";
+                    break;
+                //case 4:
+                //    label3.Text = returndata;
+                //    break;
+                //case 5:
+                //    label3.Text = returndata;
+                //    break;
+                default:
+                    label3.Text = "Erro Estranho impossível de perceber FUJAM.";
+                    break;
+            }
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             clientSocket.Connect("127.0.0.1", 8888);
