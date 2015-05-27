@@ -66,6 +66,12 @@ namespace SCV
         //Método de incrementação de votos de partido
         static void incrementarVotoPartido(int partido)
         {
+            if (partido==0)
+            {
+                incrementarVotoBranco();
+                return;
+            }
+
             contagemVotos[partido]++;
         }
 
@@ -100,6 +106,8 @@ namespace SCV
                 Boolean erro = false;
                 try
                 {
+                    String[] mensagem = cliPC.receberMensagem().Split(' ');
+                    
                     do
                     {
                         
