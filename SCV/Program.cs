@@ -29,14 +29,17 @@ namespace SCV
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
-            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Unknown, ProtocolType.IP);
+            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 8888);
+            serverSocket.Bind(ip);
             serverSocket.Listen(10);
             //A partir daqui começa a fazer algum sentido.
             while (true)
             {
                 //A partir daqui todo o sentido é perdido.
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
-                ProcessosComunicacao cliPC = new ProcessosComunicacao(serverSocket.Accept());//Eu fiz esta classe muito mais robusta do que pensava.
+                Socket cliSock = serverSocket.Accept();
+                ProcessosComunicacao cliPC = new ProcessosComunicacao(cliSock);//Eu fiz esta classe muito mais robusta do que pensava.
                 
                 client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
                 Console.WriteLine("Cliente recebido.");
@@ -113,16 +116,16 @@ namespace SCV
                         srePC.enviarMensagem(mensagem[0]);
 
                         erro = false;
-                        int switch_on=0;//placeholder for amazing things.
+                        string switch_on=srePC.receberMensagem();
                         switch (switch_on)
                         {
                             //Se o BI falhar mandar aviso
-                            case 1://ESSE BI NÃO EXISTE.
+                            case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
                                 erro = true;
                                 cliPC.enviarMensagem("O número do cartão do CC ou Eleitor que enviou não está na lista.");
                             //Se o BI já tiver sido usado mandar aviso
                                 break;
-                            case 2://ESSE BI JÁ FOI USADO.
+                            case "BI Usado"://ESSE BI JÁ FOI USADO.
                                 erro = true;
                                 cliPC.enviarMensagem("O número de eleitor que usou já foi usado.");
                             //Se tudo funcionar mandar que está tudo bem.
