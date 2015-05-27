@@ -39,7 +39,7 @@ namespace SCV
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada
                 client.startClient(clientSocket, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo.
                 clientSocket = serverSocket.AcceptTcpClient();
-                Console.WriteLine("Cliente recebido");
+                Console.WriteLine("Cliente recebido.");
             }
 
         }
