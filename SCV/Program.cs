@@ -17,7 +17,7 @@ namespace SCV
         {
             inicializacao();
             //Ligação ao SRE
-            ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
+            ProcessosComunicacao oPC = iniciarPC("127.0.0.1");
             if (oPC.receberMensagem() == "OK")
                 Console.WriteLine("Ligação Bem sucedida.\n" +
             "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
@@ -40,7 +40,6 @@ namespace SCV
                 client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
                 Console.WriteLine("Cliente recebido.");
             }
-
         }
 
 
@@ -86,7 +85,25 @@ namespace SCV
             return socket;
         }
 
-        public class handleTRV
+        static ProcessosComunicacao iniciarPC(string ip)
+        {
+            try
+            {
+                return new ProcessosComunicacao(conectar(ip));
+            }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10061)
+                {
+                    Console.WriteLine("Conecção ao servidor recusada, pressione qualquer tecla para continuar ou 's' para sair ");
+                    if (Console.ReadKey(true).ToString().ToLower() == "s")
+                        Environment.Exit(0);
+                }
+                return iniciarPC(ip);
+            }
+        }
+
+        private class handleTRV
         {
             ProcessosComunicacao cliPC;
             ProcessosComunicacao srePC;
@@ -110,28 +127,7 @@ namespace SCV
                         String[] mensagem = cliPC.receberMensagem().Split(' ');
 
                         srePC.enviarMensagem(mensagem[0]);
-
-                        erro = false;
-                        string switch_on = srePC.receberMensagem();
-                        switch (switch_on)
-                        {
-                            //Se o BI falhar mandar aviso
-                            case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
-                                erro = true;
-                                cliPC.enviarMensagem("1");
-                                //Se o BI já tiver sido usado mandar aviso
-                                break;
-                            case "BI Usado"://ESSE BI JÁ FOI USADO.
-                                erro = true;
-                                cliPC.enviarMensagem("2");
-                                //Se tudo funcionar mandar que está tudo bem.
-                                break;
-                            default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
-                                incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
-                                cliPC.enviarMensagem("3");
-                                break;
-                        }
-
+                        erro = accaoDependeSRE(srePC.receberMensagem());
                     } while (erro);
 
                 }
@@ -147,6 +143,30 @@ namespace SCV
                 catch (Exception ex)
                 {
                     Console.WriteLine(" >> " + ex.ToString());
+                }
+            }
+            private bool accaoDependeSRE(string mensagem)
+            {
+                switch (mensagem)
+                {
+                    //Se o BI falhar mandar aviso
+                    case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
+
+                        cliPC.enviarMensagem("1");
+                        return true;
+                        //Se o BI já tiver sido usado mandar aviso
+                        break;
+                    case "BI Usado"://ESSE BI JÁ FOI USADO.
+
+                        cliPC.enviarMensagem("2");
+                        return true;
+                        //Se tudo funcionar mandar que está tudo bem.
+                        break;
+                    default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
+                        incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
+                        cliPC.enviarMensagem("3");
+                        return false;
+                        break;
                 }
             }
         }
