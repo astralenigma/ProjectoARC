@@ -22,7 +22,6 @@ namespace SCV
             if (oPC.receberMensagem() == "OK")
                 Console.WriteLine("Ligação Bem sucedida.\n" +
             "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
-            //teste(oPC);
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
@@ -33,11 +32,10 @@ namespace SCV
             //A partir daqui começa a fazer algum sentido.
             while (true)
             {
-                //A partir daqui todo o sentido é perdido.
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
                 Socket cliSock = serverSocket.Accept();
                 ProcessosComunicacao cliPC = new ProcessosComunicacao(cliSock);//Eu fiz esta classe muito mais robusta do que pensava.
-
+                cliPC.enviarMensagem(nmrPartidos.ToString());
                 client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
                 Console.WriteLine("Cliente recebido.");
             }
@@ -50,8 +48,9 @@ namespace SCV
         }
 
         //Método de inicialização das variáveis do servidor.
-        static void inicializacao(int nmrpartidos)
+        static void inicializacao(int inNmrPartidos)
         {
+            nmrPartidos = inNmrPartidos;
             nmrVotosBrancos = 0;
             contagemVotos = new int[nmrPartidos];
             for (int i = 0; i < nmrPartidos; i++)
@@ -84,6 +83,7 @@ namespace SCV
             return socket;
         }
 
+        //Método porque PC é Rei, PC é Amor, PC é Deus.
         static ProcessosComunicacao iniciarPC(string ip)
         {
             try
@@ -106,6 +106,7 @@ namespace SCV
         {
             ProcessosComunicacao cliPC;
             ProcessosComunicacao srePC;
+            
             public void startClient(ProcessosComunicacao incliPC, ProcessosComunicacao insrePC)
             {
                 this.cliPC = incliPC;
@@ -130,10 +131,6 @@ namespace SCV
                     } while (erro);
 
                 }
-                catch (ObjectDisposedException ex)
-                {
-                    cliPC.enviarMensagem("4");
-                }
                 catch (SocketException ex)
                 {
                     if (ex.ErrorCode == 10054)
@@ -144,6 +141,7 @@ namespace SCV
                     Console.WriteLine(" >> " + ex.ToString());
                 }
             }
+
             private bool accaoDependeSRE(string mensagem)
             {
                 switch (mensagem)
@@ -168,23 +166,6 @@ namespace SCV
                         break;
                 }
             }
-        }
-
-        private static void testeDeLigacaoSRE(ProcessosComunicacao oPC)
-        {
-            oPC.enviarMensagem(" ");
-            Console.WriteLine(oPC.receberMensagem());
-            oPC.enviarMensagem("1113441241");
-            Console.WriteLine(oPC.receberMensagem());
-            oPC.enviarMensagem("1113441241");
-            Console.WriteLine(oPC.receberMensagem());
-        }
-
-        //Método de testes da praxe.
-        static void teste(ProcessosComunicacao oPC)
-        {
-            testeDeLigacaoSRE(oPC);
-            Console.ReadLine();
         }
     }
 }

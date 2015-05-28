@@ -12,16 +12,15 @@ namespace SRE
         static void Main(string[] args)
         {
             inicializacao();
-            //teste();
             Socket socket = esperandoLigacao();
             receberBIConeccaoCiclo(socket);
         }
 
+        //Método que inicializa a lista.
         private static void inicializacao()
         {
             leitorEleitores();
         }
-
 
         //Método que Lê o ficheiro de texto.
         static void leitorEleitores()
@@ -119,7 +118,6 @@ namespace SRE
                     data = Encoding.ASCII.GetBytes("BI Nao Encontrado");
                     Console.WriteLine("BI Nao Encontrado");//check
                     break;
-                
             }
             socket.Send(data);
         }
@@ -132,20 +130,6 @@ namespace SRE
                 confirmacaoBIconeccao(socket);
             } while (socket.Connected); //This will never happen due to circunstances completely outside my power and knowledge.
             Console.WriteLine("Cliente " + socket.RemoteEndPoint + " disconectado.\n");
-        }
-
-        //Método de testes
-        static void teste()
-        {
-            leitorEleitores();
-            imprimirEleitores();
-            votando("1113441241");
-            //escritorEleitores("1113441241");
-            imprimirEleitores();
-            votando("1113441241");
-            //escritorEleitores("1113441241");
-            imprimirEleitores();
-
         }
 
         //Método controverso no seu uso.

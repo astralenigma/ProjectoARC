@@ -11,8 +11,24 @@ namespace ProjectoARC
         public Form1()
         {
             InitializeComponent();
-            inicializacaoDosPartidos();
             oPC = new ProcessosComunicacao(clientSocket);
+            try
+            {
+                clientSocket.Connect("127.0.0.1", 8888);
+                int nmrPartidos = Convert.ToInt32(oPC.receberMensagem());
+                inicializacaoDosPartidos(nmrPartidos);
+            }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10061)
+                {
+                    toggleVisibilidade();
+                    label3.Text = "SCV não encontrado. Ligue o servidor e reinicie o terminal.";
+                    //button2.Visible = false;//comentar para testar apenas a janela do terminal.
+                }
+            }
+            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
+            //mais automático com menos necessidade de um programador a fuçar no código
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,14 +57,13 @@ namespace ProjectoARC
             toggleVisibilidade();
         }
         /*Código onde os partidos são adicionados à interface.*/
-        private void inicializacaoDosPartidos()
+        private void inicializacaoDosPartidos(int nmrPartidos)
         {
-            int nmrPartidos = 9;
+            comboBox1.Sorted = false;
             for (int i = 0; i <= nmrPartidos; i++)
             {
                 comboBox1.Items.Add(i);
             }
-
         }
 
         //Método do botão da mensagem.
@@ -98,23 +113,10 @@ namespace ProjectoARC
                     break;
             }
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            try
-            {
-                clientSocket.Connect("127.0.0.1", 8888);
-            }
-            catch(SocketException ex)
-            {
-                if (ex.ErrorCode == 10061)
-                {
-                    toggleVisibilidade();
-                    label3.Text = "SCV não encontrado. Ligue o servidor e reinicie o terminal.";
-                    //button2.Visible = false;//comentar para testar apenas a janela do terminal.
-                }
-            }
-            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
-            //mais automático com menos necessidade de um programador a fuçar no código
+            
         }
     }
 }
