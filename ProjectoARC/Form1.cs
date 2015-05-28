@@ -20,10 +20,20 @@ namespace ProjectoARC
             //Código onde recebe o voto escolhido.
 
             //Aqui ele envia a informação do utilizador.
+            try
+            {
             oPC.enviarMensagem(textBox1.Text + " " + comboBox1.SelectedItem);
             
             //Aqui ele recebe a resposta não quer dizer que ele goste dela.
             mensagens(oPC.receberMensagem());
+            }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10057)
+                {
+                    label3.Text = "Conecção ao SCV perdida por favor reinicie o terminal.";
+                }
+            }
             //Apagar o input e mostrar o resultado.
 
             limparCampos();
@@ -90,7 +100,19 @@ namespace ProjectoARC
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            clientSocket.Connect("127.0.0.1", 8888);
+            try
+            {
+                clientSocket.Connect("127.0.0.1", 8888);
+            }
+            catch(SocketException ex)
+            {
+                if (ex.ErrorCode == 10061)
+                {
+                    toggleVisibilidade();
+                    label3.Text = "SCV não encontrado. Ligue o servidor e reinicie o terminal.";
+                    //button2.Visible = false;//comentar para testar apenas a janela do terminal.
+                }
+            }
             //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
             //mais automático com menos necessidade de um programador a fuçar no código
         }
