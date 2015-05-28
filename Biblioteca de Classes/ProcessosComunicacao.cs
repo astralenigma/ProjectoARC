@@ -13,6 +13,7 @@ namespace BibliotecaDeClasses
         {
             this.socket = socket;
         }
+
         public void enviarMensagens()
         {
             string mensagem = "";
