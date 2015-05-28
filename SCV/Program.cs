@@ -43,7 +43,6 @@ namespace SCV
             }
         }
 
-
         //Método de incrementação de votos em branco.
         static void incrementarVotoBranco()
         {
