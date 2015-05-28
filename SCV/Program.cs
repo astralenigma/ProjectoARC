@@ -96,7 +96,7 @@ namespace SCV
                 if (ex.ErrorCode == 10061)
                 {
                     Console.WriteLine("Conecção ao servidor recusada, pressione qualquer tecla para continuar ou 's' para sair ");
-                    if (Console.ReadKey(true).ToString().ToLower() == "s")
+                    if (Console.ReadKey(true).KeyChar.ToString().ToLower()== "s")
                         Environment.Exit(0);
                 }
                 return iniciarPC(ip);
