@@ -23,8 +23,8 @@ namespace SCV
             //Ligação ao SRE
             ProcessosComunicacao oPC = new ProcessosComunicacao(conectar("127.0.0.1"));//Estou a começar a ver problemas nisto. TRV vai provavelmente entrar em conflicto. Mudar portas?
             if (oPC.receberMensagem() == "OK")
-                Console.WriteLine("Ligação Bem sucedida.\n"+
-            "Conectado ao Servidor de Recenseamento Eleitoral em "+oPC.remoteEndPoint()+".");
+                Console.WriteLine("Ligação Bem sucedida.\n" +
+            "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
             //teste(oPC);
 
             //Ligações dos TRVs
@@ -40,14 +40,14 @@ namespace SCV
                 handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
                 Socket cliSock = serverSocket.Accept();
                 ProcessosComunicacao cliPC = new ProcessosComunicacao(cliSock);//Eu fiz esta classe muito mais robusta do que pensava.
-                
+
                 client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
                 Console.WriteLine("Cliente recebido.");
             }
 
         }
 
-        
+
         //Método de incrementação de votos em branco.
         static void incrementarVotoBranco()
         {
@@ -69,7 +69,7 @@ namespace SCV
         //Método de incrementação de votos de partido
         static void incrementarVotoPartido(int partido)
         {
-            if (partido==0)
+            if (partido == 0)
             {
                 incrementarVotoBranco();
                 return;
@@ -116,35 +116,37 @@ namespace SCV
                         srePC.enviarMensagem(mensagem[0]);
 
                         erro = false;
-                        string switch_on=srePC.receberMensagem();
+                        string switch_on = srePC.receberMensagem();
                         switch (switch_on)
                         {
                             //Se o BI falhar mandar aviso
                             case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
                                 erro = true;
                                 cliPC.enviarMensagem("1");
-                            //Se o BI já tiver sido usado mandar aviso
+                                //Se o BI já tiver sido usado mandar aviso
                                 break;
                             case "BI Usado"://ESSE BI JÁ FOI USADO.
                                 erro = true;
                                 cliPC.enviarMensagem("2");
-                            //Se tudo funcionar mandar que está tudo bem.
+                                //Se tudo funcionar mandar que está tudo bem.
                                 break;
                             default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
                                 incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
                                 cliPC.enviarMensagem("3");
                                 break;
                         }
- 
+
                     } while (erro);
-                    
+
                 }
-                catch (ObjectDisposedException ex) {
+                catch (ObjectDisposedException ex)
+                {
                     cliPC.enviarMensagem("4");
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine(ex.ErrorCode);
+                    if (ex.ErrorCode == 10054)
+                        Console.WriteLine("O socket desconectou-se.");
                 }
                 catch (Exception ex)
                 {
