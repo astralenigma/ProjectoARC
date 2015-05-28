@@ -15,7 +15,8 @@ namespace SCV
 
         static void Main(string[] args)
         {
-            inicializacao();
+            //inicialização da contagem de votos.
+            inicializacao(10);
             //Ligação ao SRE
             ProcessosComunicacao oPC = iniciarPC("127.0.0.1");
             if (oPC.receberMensagem() == "OK")
@@ -50,9 +51,8 @@ namespace SCV
         }
 
         //Método de inicialização das variáveis do servidor.
-        static void inicializacao()
+        static void inicializacao(int nmrpartidos)
         {
-            nmrPartidos = 10;//no futuro talvez receba o número de partidos na linha de comandos
             nmrVotosBrancos = 0;
             contagemVotos = new int[nmrPartidos];
             for (int i = 0; i < nmrPartidos; i++)
