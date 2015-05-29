@@ -89,9 +89,9 @@ namespace ProjectoARC
                 case "3":
                     label3.Text = "Votação bem sucedida.";
                     break;
-                //case 4:
-                //    label3.Text = returndata;
-                //    break;
+                case "4":
+                    label3.Text = "Perdeu-se a ligação com o SRE por favor contacte o administrador.";
+                    break;
                 //case 5:
                 //    label3.Text = returndata;
                 //    break;
