@@ -19,9 +19,8 @@ namespace SCV
             inicializacao(10);
             //Ligação ao SRE
             ProcessosComunicacao oPC = iniciarPC("127.0.0.1");
-            if (oPC.receberMensagem() == "OK")
-                Console.WriteLine("Ligação Bem sucedida.\n" +
-            "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
+            Console.WriteLine("Ligação Bem sucedida.\n" +
+                "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
 
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
@@ -95,7 +94,7 @@ namespace SCV
                 if (ex.ErrorCode == 10061)
                 {
                     Console.WriteLine("Conecção ao servidor recusada, pressione qualquer tecla para continuar ou 's' para sair ");
-                    if (Console.ReadKey(true).KeyChar.ToString().ToLower()== "s")
+                    if (Console.ReadKey(true).KeyChar.ToString().ToLower() == "s")
                         Environment.Exit(0);
                 }
                 return iniciarPC(ip);
@@ -106,7 +105,7 @@ namespace SCV
         {
             ProcessosComunicacao cliPC;
             ProcessosComunicacao srePC;
-            
+
             public void startClient(ProcessosComunicacao incliPC, ProcessosComunicacao insrePC)
             {
                 this.cliPC = incliPC;

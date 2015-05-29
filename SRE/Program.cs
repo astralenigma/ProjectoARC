@@ -9,16 +9,21 @@ namespace SRE
     class Program
     {
         private static List<String> lista;
+        private static Socket socket;
         static void Main(string[] args)
         {
+            
             inicializacao();
-            Socket socket = esperandoLigacao();
-            receberBIConeccaoCiclo(socket);
+            estabelecerConeccao();
         }
 
         //Método que inicializa a lista.
         private static void inicializacao()
         {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
+            socket.Bind(ip);
+            socket.Listen(10);
             leitorEleitores();
         }
 
@@ -83,17 +88,12 @@ namespace SRE
         //Método que espera pelas ligações.
         static Socket esperandoLigacao()
         {
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
-            socket.Bind(ip);
-            socket.Listen(1);
+            
             Console.WriteLine("Waiting...");
             Socket socket2 = socket.Accept();
 
             EndPoint ipep = socket2.RemoteEndPoint;
             Console.WriteLine("Client " + ipep + " Connectado.\n");
-
-            mensageDeConfirmacaoCliente(socket2);
             return socket2;
         }
 
@@ -101,25 +101,37 @@ namespace SRE
         static void confirmacaoBIconeccao(Socket socket)
         {
             byte[] data = new byte[1024];
-            socket.Receive(data);
-            string mensagemRecebida = Encoding.ASCII.GetString(data);
-            mensagemRecebida = mensagemRecebida.Replace("\0", "");//Limpar os bits nulos.
-            switch (votando(mensagemRecebida))
+            try
             {
-                case 0:
-                    data = Encoding.ASCII.GetBytes("Ok");
-                    Console.WriteLine("Ok");//check
-                    break;
-                case 1:
-                    data = Encoding.ASCII.GetBytes("BI Usado");
-                    Console.WriteLine("BI Usado");//check
-                    break;
-                case 2:
-                    data = Encoding.ASCII.GetBytes("BI Nao Encontrado");
-                    Console.WriteLine("BI Nao Encontrado");//check
-                    break;
+                socket.Receive(data);
+
+                string mensagemRecebida = Encoding.ASCII.GetString(data);
+                mensagemRecebida = mensagemRecebida.Replace("\0", "");//Limpar os bits nulos.
+                switch (votando(mensagemRecebida))
+                {
+                    case 0:
+                        data = Encoding.ASCII.GetBytes("Ok");
+                        Console.WriteLine("Ok");//check
+                        break;
+                    case 1:
+                        data = Encoding.ASCII.GetBytes("BI Usado");
+                        Console.WriteLine("BI Usado");//check
+                        break;
+                    case 2:
+                        data = Encoding.ASCII.GetBytes("BI Nao Encontrado");
+                        Console.WriteLine("BI Nao Encontrado");//check
+                        break;
+                }
+                socket.Send(data);
             }
-            socket.Send(data);
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10054)
+                {
+                    Console.WriteLine("Conecção perdida tentando restabelecer conecção.");
+                    estabelecerConeccao();
+                }
+            }
         }
 
         //Método do ciclo da recepção das mensagens.
@@ -132,24 +144,11 @@ namespace SRE
             Console.WriteLine("Cliente " + socket.RemoteEndPoint + " disconectado.\n");
         }
 
-        //Método controverso no seu uso.
-        static void mensageDeConfirmacaoCliente(Socket socket)
+        //Método para estabelecer e restabelecer a connecção.
+        static void estabelecerConeccao()
         {
-            byte[] data = new byte[1024];
-            string mensagemEnviada = "OK";
-            data = Encoding.ASCII.GetBytes(mensagemEnviada);
-            socket.Send(data);
+            Socket socket = esperandoLigacao();
+            receberBIConeccaoCiclo(socket);
         }
-
-        //Método que imprime a lista no ecrã usado apenas para debug
-        static void imprimirEleitores()
-        {
-            foreach (String eleitor in lista)
-            {
-                System.Console.WriteLine(eleitor);
-            }
-            Console.ReadLine();
-        }
-
     }
 }
