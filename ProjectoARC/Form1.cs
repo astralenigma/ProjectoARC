@@ -12,23 +12,7 @@ namespace ProjectoARC
         {
             InitializeComponent();
             oPC = new ProcessosComunicacao(clientSocket);
-            try
-            {
-                clientSocket.Connect("127.0.0.1", 8888);
-                int nmrPartidos = Convert.ToInt32(oPC.receberMensagem());
-                inicializacaoDosPartidos(nmrPartidos);
-            }
-            catch (SocketException ex)
-            {
-                if (ex.ErrorCode == 10061)
-                {
-                    toggleVisibilidade();
-                    label3.Text = "SCV não encontrado. Ligue o servidor e reinicie o terminal.";
-                    //button2.Visible = false;//comentar para testar apenas a janela do terminal.
-                }
-            }
-            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
-            //mais automático com menos necessidade de um programador a fuçar no código
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -42,19 +26,22 @@ namespace ProjectoARC
             
             //Aqui ele recebe a resposta não quer dizer que ele goste dela.
             mensagens(oPC.receberMensagem());
-            }
-            catch (SocketException ex)
-            {
-                if (ex.ErrorCode == 10057)
-                {
-                    label3.Text = "Conecção ao SCV perdida por favor reinicie o terminal.";
-                }
-            }
+            
             //Apagar o input e mostrar o resultado.
 
             limparCampos();
             //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
             toggleVisibilidade();
+            }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10054)
+                {
+                    toggleVisibilidade();
+                    label3.Text = "Conecção ao SCV perdida por favor reinicie o terminal.";
+                    button2.Visible = false;
+                }
+            }
         }
         /*Código onde os partidos são adicionados à interface.*/
         private void inicializacaoDosPartidos(int nmrPartidos)
@@ -72,7 +59,7 @@ namespace ProjectoARC
             toggleVisibilidade();
         }
 
-        //Método que troca a visiblidade das mensagens. Eu tentei impedir isto mas cada vez mais soou como uma boa ideia.
+        //Método que troca a visiblidade das mensagens.
         private void toggleVisibilidade()
         {
             label3.Visible = !label3.Visible;
@@ -116,7 +103,23 @@ namespace ProjectoARC
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            try
+            {
+                clientSocket.Connect("127.0.0.1", 8888);
+                int nmrPartidos = Convert.ToInt32(oPC.receberMensagem());
+                inicializacaoDosPartidos(nmrPartidos);
+            }
+            catch (SocketException ex)
+            {
+                if (ex.ErrorCode == 10061)
+                {
+                    label3.Text = "SCV não encontrado. Ligue o servidor e reinicie o terminal.";
+                    toggleVisibilidade();
+                    button2.Visible = false;
+                }
+            }
+            //Não gosto do facto de estar a usar uma string para meter o IP em vez de algo 
+            //mais automático com menos necessidade de um programador a fuçar no código
         }
     }
 }
