@@ -130,39 +130,50 @@ namespace SCV
                     } while (erro);
 
                 }
+                catch (TRVCaiuException ex)
+                {
+                    Console.WriteLine("O cliente desconectou-se.");
+                }
                 catch (SocketException ex)
                 {
                     if (ex.ErrorCode == 10054)
-                        Console.WriteLine("O socket desconectou-se.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(" >> " + ex.ToString());
+                    {
+                        Console.WriteLine("Desconectado do SRE.");
+                        cliPC.enviarMensagem("4");
+                    }
+
                 }
             }
 
             private bool accaoDependeSRE(string mensagem)
             {
-                switch (mensagem)
+                try
                 {
-                    //Se o BI falhar mandar aviso
-                    case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
+                    switch (mensagem)
+                    {
+                        //Se o BI falhar mandar aviso
+                        case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
 
-                        cliPC.enviarMensagem("1");
-                        return true;
-                        //Se o BI já tiver sido usado mandar aviso
-                        break;
-                    case "BI Usado"://ESSE BI JÁ FOI USADO.
+                            cliPC.enviarMensagem("1");
+                            return true;
+                            //Se o BI já tiver sido usado mandar aviso
+                            break;
+                        case "BI Usado"://ESSE BI JÁ FOI USADO.
 
-                        cliPC.enviarMensagem("2");
-                        return true;
-                        //Se tudo funcionar mandar que está tudo bem.
-                        break;
-                    default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
-                        incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
-                        cliPC.enviarMensagem("3");
-                        return false;
-                        break;
+                            cliPC.enviarMensagem("2");
+                            return true;
+                            //Se tudo funcionar mandar que está tudo bem.
+                            break;
+                        default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
+                            incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
+                            cliPC.enviarMensagem("3");
+                            return false;
+                            break;
+                    }
+                }
+                catch (SocketException)
+                {
+                    throw new TRVCaiuException();
                 }
             }
         }
