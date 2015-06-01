@@ -12,12 +12,11 @@ namespace SRE
         private static Socket socket;
         static void Main(string[] args)
         {
-            
             inicializacao();
             estabelecerConeccao();
         }
 
-        //Método que inicializa a lista.
+        //Método que inicializa a lista, e mete o servidor a ouvir.
         private static void inicializacao()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -30,6 +29,7 @@ namespace SRE
         //Método que Lê o ficheiro de texto.
         static void leitorEleitores()
         {
+            //Acrescentar uma excepção para desligar o servidor caso a lista.txt não exista.
             string line;
             lista = new List<String>();
             System.IO.StreamReader file = new System.IO.StreamReader(@"lista.txt");

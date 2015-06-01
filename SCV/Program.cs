@@ -15,6 +15,8 @@ namespace SCV
 
         static void Main(string[] args)
         {
+            //Verificar se existe um backup primeiro.
+
             //inicialização da contagem de votos.
             inicializacao(10);
             //Ligação ao SRE
@@ -64,10 +66,12 @@ namespace SCV
             if (partido == 0)
             {
                 incrementarVotoBranco();
-                return;
             }
-
-            contagemVotos[partido]++;
+            else
+            {
+                contagemVotos[partido]++;
+            }
+            //Gravar o voto, para o caso da energia falhar.
         }
 
         //Método conecção
@@ -156,12 +160,12 @@ namespace SCV
 
                             cliPC.enviarMensagem("1");
                             return true;
-                            //Se o BI já tiver sido usado mandar aviso
+                        //Se o BI já tiver sido usado mandar aviso
                         case "BI Usado"://ESSE BI JÁ FOI USADO.
 
                             cliPC.enviarMensagem("2");
                             return true;
-                            //Se tudo funcionar mandar que está tudo bem.
+                        //Se tudo funcionar mandar que está tudo bem.
                         default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
                             incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
                             cliPC.enviarMensagem("3");
