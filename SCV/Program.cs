@@ -42,12 +42,6 @@ namespace SCV
             }
         }
 
-        //Método de incrementação de votos em branco.
-        static void incrementarVotoBranco()
-        {
-            nmrVotosBrancos++;
-        }
-
         //Método de inicialização das variáveis do servidor.
         static void inicializacao(int inNmrPartidos)
         {
@@ -58,20 +52,6 @@ namespace SCV
             {
                 contagemVotos[i] = 0;
             }
-        }
-
-        //Método de incrementação de votos de partido
-        static void incrementarVotoPartido(int partido)
-        {
-            if (partido == 0)
-            {
-                incrementarVotoBranco();
-            }
-            else
-            {
-                contagemVotos[partido]++;
-            }
-            //Gravar o voto, para o caso da energia falhar.
         }
 
         //Método conecção
@@ -105,6 +85,27 @@ namespace SCV
             }
         }
 
+        //Método de incrementação de votos em branco.
+        static void incrementarVotoBranco()
+        {
+            nmrVotosBrancos++;
+        }
+
+        //Método de incrementação de votos de partido
+        static void incrementarVotoPartido(int partido)
+        {
+            if (partido == 0)
+            {
+                incrementarVotoBranco();
+            }
+            else
+            {
+                contagemVotos[partido]++;
+            }
+            //Gravar o voto, para o caso da energia falhar.
+        }
+
+        //Classe das operações do TRV.
         private class handleTRV
         {
             ProcessosComunicacao cliPC;
