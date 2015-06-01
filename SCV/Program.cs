@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using System.Collections.Generic;
 
 namespace SCV
 {
@@ -17,9 +18,19 @@ namespace SCV
         static void Main(string[] args)
         {
             //Verificar se existe um backup primeiro.
-
-            //inicialização da contagem de votos.
-            inicializacao(10);
+            Console.WriteLine("Verificando se é a primeira vez que o servidor está a correr...");
+            try
+            {
+                carregarBackup();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Servidor correndo pela primeira vez começando inicialização");
+                Console.WriteLine("Insira o número de partidos a concorrer nas eleições.");
+                //inicialização da contagem de votos.
+                nmrPartidos = Convert.ToInt32(Console.ReadLine());
+                inicializacao(nmrPartidos);
+            }
             //Ligação ao SRE
             ProcessosComunicacao oPC = iniciarPC("127.0.0.1");
             Console.WriteLine("Ligação Bem sucedida.\n" +
@@ -42,6 +53,7 @@ namespace SCV
                 Console.WriteLine("Cliente recebido.");
             }
         }
+
 
         //Método de inicialização das variáveis do servidor.
         static void inicializacao(int inNmrPartidos)
@@ -108,14 +120,32 @@ namespace SCV
 
         }
 
+        //Método para guardar o backup dos votos.
         private static void guardarBackup()
         {
-            String texto = "Branco " + nmrVotosBrancos;
-            for (int i = 1; i <= nmrPartidos; i++)
+            String texto = nmrVotosBrancos + "\n";
+            for (int i = 0; i < nmrPartidos; i++)
             {
-                texto += "Partido " + i + " " + contagemVotos[i - 1] + "\n";
+                texto += contagemVotos[i] + "\n";
             }
             File.WriteAllText(@"backup.txt", texto);
+        }
+
+        //Método para carregar o backup dos votos.
+        private static void carregarBackup()
+        {
+            List<int> lista=new List<int>();
+            StreamReader file = new StreamReader(@"backup.txt");
+            nmrVotosBrancos=Convert.ToInt32(file.ReadLine());
+            string line = "";
+
+            while ((line = file.ReadLine()) != null)
+            {
+                lista.Add(Convert.ToInt32(line));
+            }
+            file.Close();
+            contagemVotos = lista.ToArray();
+            nmrPartidos = contagemVotos.Length;
         }
 
         //Classe das operações do TRV.
