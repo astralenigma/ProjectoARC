@@ -13,7 +13,8 @@ namespace SCV
         static int nmrPartidos;
         static int nmrVotosBrancos;
         static int[] contagemVotos;
-        const int PORTA = 6000;
+        const int PORTASRE = 6000;
+        const int PORTATRV = 8888;
 
         static void Main(string[] args)
         {
@@ -39,7 +40,7 @@ namespace SCV
             //Ligações dos TRVs
             //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
             Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, 8888);
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, PORTATRV);
             serverSocket.Bind(ip);
             serverSocket.Listen(10);
             //A partir daqui começa a fazer algum sentido.
@@ -72,7 +73,7 @@ namespace SCV
         {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress ipad = IPAddress.Parse(ipStr);
-            IPEndPoint ip = new IPEndPoint(ipad, PORTA);
+            IPEndPoint ip = new IPEndPoint(ipad, PORTASRE);
 
             socket.Connect(ip);
 
