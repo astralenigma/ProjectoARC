@@ -130,7 +130,7 @@ namespace SCV
                     } while (erro);
 
                 }
-                catch (TRVCaiuException ex)
+                catch (TRVCaiuException)
                 {
                     Console.WriteLine("O cliente desconectou-se.");
                 }
@@ -157,18 +157,15 @@ namespace SCV
                             cliPC.enviarMensagem("1");
                             return true;
                             //Se o BI já tiver sido usado mandar aviso
-                            break;
                         case "BI Usado"://ESSE BI JÁ FOI USADO.
 
                             cliPC.enviarMensagem("2");
                             return true;
                             //Se tudo funcionar mandar que está tudo bem.
-                            break;
                         default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
                             incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
                             cliPC.enviarMensagem("3");
                             return false;
-                            break;
                     }
                 }
                 catch (SocketException)
