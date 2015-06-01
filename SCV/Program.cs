@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace SCV
 {
@@ -103,6 +104,18 @@ namespace SCV
                 contagemVotos[partido]++;
             }
             //Gravar o voto, para o caso da energia falhar.
+            guardarBackup();
+
+        }
+
+        private static void guardarBackup()
+        {
+            String texto = "Branco " + nmrVotosBrancos;
+            for (int i = 1; i <= nmrPartidos; i++)
+            {
+                texto += "Partido " + i + " " + contagemVotos[i - 1] + "\n";
+            }
+            File.WriteAllText(@"backup.txt", texto);
         }
 
         //Classe das operações do TRV.
