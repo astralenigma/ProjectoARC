@@ -29,7 +29,6 @@ namespace SRE
         //Método que Lê o ficheiro de texto.
         static void leitorEleitores()
         {
-            //Acrescentar uma excepção para desligar o servidor caso a lista.txt não exista.
             string line;
             lista = new List<String>();
             try
@@ -69,7 +68,8 @@ namespace SRE
                 }
                 texto += "\n";
             }
-            System.IO.File.WriteAllText(@"lista.txt", texto);
+            //Verificar as excepções que este método lança.
+            File.WriteAllText(@"lista.txt", texto);
             leitorEleitores();
         }
 
