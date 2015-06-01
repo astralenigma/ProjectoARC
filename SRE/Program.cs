@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
+using System.IO;
 namespace SRE
 {
     class Program
@@ -19,11 +19,11 @@ namespace SRE
         //Método que inicializa a lista, e mete o servidor a ouvir.
         private static void inicializacao()
         {
+            leitorEleitores();
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
             socket.Bind(ip);
             socket.Listen(10);
-            leitorEleitores();
         }
 
         //Método que Lê o ficheiro de texto.
@@ -32,12 +32,21 @@ namespace SRE
             //Acrescentar uma excepção para desligar o servidor caso a lista.txt não exista.
             string line;
             lista = new List<String>();
-            System.IO.StreamReader file = new System.IO.StreamReader(@"lista.txt");
-            while ((line = file.ReadLine()) != null)
+            try
             {
-                lista.Add(line);
+                StreamReader file = new StreamReader(@"lista.txt");
+                while ((line = file.ReadLine()) != null)
+                {
+                    lista.Add(line);
+                }
+                file.Close();
             }
-            file.Close();
+            catch (Exception)
+            {
+                Console.WriteLine("A lista não foi encontrada, Servidor será desligado.");
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
         }
 
         //Metodo que altera o ficheiro de texto.
@@ -88,7 +97,7 @@ namespace SRE
         //Método que espera pelas ligações.
         static Socket esperandoLigacao()
         {
-            
+
             Console.WriteLine("Waiting...");
             Socket socket2 = socket.Accept();
 
