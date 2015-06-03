@@ -53,5 +53,19 @@ namespace BibliotecaDeClasses
         {
             return socket.RemoteEndPoint;
         }
+
+        public string getOwnIP()
+        {
+            IPHostEntry host= Dns.GetHostEntry(Dns.GetHostName());
+            string localIP = "?";
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
+        }
     }
 }
