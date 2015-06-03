@@ -7,6 +7,9 @@ namespace BibliotecaDeClasses
 {
     public class ProcessosComunicacao
     {
+        /// <summary>
+        /// Variável na qual a maior parte da magia é feita.
+        /// </summary>
         Socket socket;
         
        public ProcessosComunicacao(Socket socket)
@@ -14,11 +17,15 @@ namespace BibliotecaDeClasses
             this.socket = socket;
         }
 
+        /// <summary>
+        /// Método para enviar mensagens. Recomendado ser corrido num thread paralela.
+        /// </summary>
         public void enviarMensagens()
         {
-            string mensagem = "";
+            string mensagem;
             do
             {
+                mensagem = "";
                 mensagem = enviarMensagem(Console.ReadLine());
             } while (mensagem != "exit");
 
@@ -32,6 +39,9 @@ namespace BibliotecaDeClasses
             return mensagem;
         }
 
+        /// <summary>
+        /// Método para receber mensagens. Recomendado ser corrido num thread paralela.
+        /// </summary>
         public void receberMensagens()
         {
             do
