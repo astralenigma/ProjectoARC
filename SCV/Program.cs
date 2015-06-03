@@ -13,6 +13,8 @@ namespace SCV
         static int nmrPartidos;
         static int nmrVotosBrancos;
         static int[] contagemVotos;
+        private static ProcessosComunicacao oPC;
+        private static Socket serverSocket;
         const int PORTASRE = 6000;
         const int PORTATRV = 8888;
 
@@ -33,26 +35,15 @@ namespace SCV
                 inicializacao(nmrPartidos);
             }
             //Ligação ao SRE
-            ProcessosComunicacao oPC = iniciarPC("127.0.0.1");
-            Console.WriteLine("Ligação Bem sucedida.\n" +
-                "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
+            estabelecerLigacaoSRE();
 
             //Ligações dos TRVs
-            //A partir desta linha os detalhes de funcionamento do código passam para além do meu conhecimento.
-            Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPEndPoint ip = new IPEndPoint(IPAddress.Any, PORTATRV);
-            serverSocket.Bind(ip);
-            serverSocket.Listen(10);
-            //A partir daqui começa a fazer algum sentido.
-            while (true)
-            {
-                handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
-                Socket cliSock = serverSocket.Accept();
-                ProcessosComunicacao cliPC = new ProcessosComunicacao(cliSock);//Eu fiz esta classe muito mais robusta do que pensava.
-                cliPC.enviarMensagem(nmrPartidos.ToString());
-                client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
-                Console.WriteLine("Cliente recebido.");
-            }
+            //O iniciado o servidor para ouvir os TRVs.
+            esperandoPorUmTRV();
+            //Os TRVs são aceites.
+            aceitarTRVs();
+            
+            
         }
 
 
@@ -99,12 +90,6 @@ namespace SCV
             }
         }
 
-        //Método de incrementação de votos em branco.
-        static void incrementarVotoBranco()
-        {
-            nmrVotosBrancos++;
-        }
-
         //Método de incrementação de votos de partido
         static void incrementarVotoPartido(int partido)
         {
@@ -121,6 +106,11 @@ namespace SCV
 
         }
 
+        //Método de incrementação de votos em branco.
+        private static void incrementarVotoBranco()
+        {
+            nmrVotosBrancos++;
+        }
         //Método para guardar o backup dos votos.
         private static void guardarBackup()
         {
@@ -149,6 +139,34 @@ namespace SCV
             nmrPartidos = contagemVotos.Length;
         }
 
+        //Método para estabelecer ligacao ao SRE.
+        private static void estabelecerLigacaoSRE()
+        {
+            oPC = iniciarPC("127.0.0.1");
+            Console.WriteLine("Ligação Bem sucedida.\n" +
+                "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
+        }
+
+        //Eu preciso de um TRV, eu estou à espera de um TRV pelo fim da noite.
+        private static void esperandoPorUmTRV()
+        {
+            serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint ip = new IPEndPoint(IPAddress.Any, PORTATRV);
+            serverSocket.Bind(ip);
+            serverSocket.Listen(10);
+        }
+        //Método que faz todas as 
+        private static void aceitarTRVs(){
+            while (true)
+            {
+                handleTRV client = new handleTRV();//Classe criada só para funcionar com o código do qual não entendo nada, acho piada o facto de já ter alterado o código tanto que já nem deve de fazer a mesma coisa.
+                Socket cliSock = serverSocket.Accept();
+                ProcessosComunicacao cliPC = new ProcessosComunicacao(cliSock);//Eu fiz esta classe muito mais robusta do que pensava.
+                cliPC.enviarMensagem(nmrPartidos.ToString());
+                client.startClient(cliPC, oPC);//Loucura de código. Loucura mesmo já me obrigou a trocar de lugares e tudo 2X ou pelo menos é a segunda que me lembro.
+                Console.WriteLine("Cliente recebido.");
+            }
+        }
         //Classe das operações do TRV.
         private class handleTRV
         {
