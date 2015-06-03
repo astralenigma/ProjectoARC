@@ -4,12 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.IO;
+using BibliotecaDeClasses;
 namespace SRE
 {
     class Program
     {
         private static List<String> lista;
         private static Socket socket;
+        private static ProcessosComunicacao oPC;
         static void Main(string[] args)
         {
             inicializacao();
@@ -24,6 +26,7 @@ namespace SRE
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
             socket.Bind(ip);
             socket.Listen(10);
+            oPC=new ProcessosComunicacao(socket);
         }
 
         //Método que Lê o ficheiro de texto.
@@ -97,12 +100,12 @@ namespace SRE
         //Método que espera pelas ligações.
         static Socket esperandoLigacao()
         {
-
-            Console.WriteLine("Waiting...");
+            Console.WriteLine("O IP do servidor é "+oPC.getOwnIP()+" .");
+            Console.WriteLine("Esperando por conecção...");
             Socket socket2 = socket.Accept();
 
             EndPoint ipep = socket2.RemoteEndPoint;
-            Console.WriteLine("Client " + ipep + " Connectado.\n");
+            Console.WriteLine("Cliente " + ipep + " Connectado.\n");
             return socket2;
         }
 
@@ -112,22 +115,19 @@ namespace SRE
             byte[] data = new byte[1024];
             try
             {
-                socket.Receive(data);
-
-                string mensagemRecebida = Encoding.ASCII.GetString(data);
-                mensagemRecebida = mensagemRecebida.Replace("\0", "");//Limpar os bits nulos.
+                string mensagemRecebida = oPC.receberMensagem();
                 switch (votando(mensagemRecebida))
                 {
                     case 0:
-                        data = Encoding.ASCII.GetBytes("Ok");
+                        oPC.enviarMensagem("Ok");
                         Console.WriteLine("Ok");//check
                         break;
                     case 1:
-                        data = Encoding.ASCII.GetBytes("BI Usado");
+                        oPC.enviarMensagem("BI Usado");
                         Console.WriteLine("BI Usado");//check
                         break;
                     case 2:
-                        data = Encoding.ASCII.GetBytes("BI Nao Encontrado");
+                        oPC.enviarMensagem("BI Nao Encontrado");
                         Console.WriteLine("BI Nao Encontrado");//check
                         break;
                 }
