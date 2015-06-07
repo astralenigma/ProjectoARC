@@ -196,7 +196,7 @@ namespace SCV
                         String[] mensagem = cliPC.receberMensagem().Split(' ');
 
                         srePC.enviarMensagem(mensagem[0]);
-                        erro = accaoDependeSRE(srePC.receberMensagem());
+                        erro = accaoDependeSRE(srePC.receberMensagem(),mensagem[1]);
                     } while (erro);
 
                 }
@@ -215,11 +215,11 @@ namespace SCV
                 }
             }
 
-            private bool accaoDependeSRE(string mensagem)
+            private bool accaoDependeSRE(string respostaSRE,string mensagem)
             {
                 try
                 {
-                    switch (mensagem)
+                    switch (respostaSRE)
                     {
                         //Se o BI falhar mandar aviso
                         case "BI Nao Encontrado"://ESSE BI NÃO EXISTE.
@@ -233,7 +233,7 @@ namespace SCV
                             return true;
                         //Se tudo funcionar mandar que está tudo bem.
                         default://ESTÁ TUDO A FUNCIONAR MAS NÃO ME CULPES A MIM.
-                            incrementarVotoPartido(Convert.ToInt32(mensagem[1]));
+                            incrementarVotoPartido(Convert.ToInt32(mensagem));
                             cliPC.enviarMensagem("3");
                             return false;
                     }
