@@ -69,6 +69,10 @@ namespace BibliotecaDeClasses
             this.socket = socket;
         }
 
+        public Socket getSocket()
+        {
+            return socket;
+        }
         public string getOwnIP()
         {
             IPHostEntry host= Dns.GetHostEntry(Dns.GetHostName());
