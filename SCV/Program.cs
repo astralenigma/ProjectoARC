@@ -59,16 +59,12 @@ namespace SCV
             }
         }
 
-        //Método conecção
-        static Socket conectar(String ipStr)
+        //Método para estabelecer ligacao ao SRE.
+        private static void estabelecerLigacaoSRE()
         {
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress ipad = IPAddress.Parse(ipStr);
-            IPEndPoint ip = new IPEndPoint(ipad, PORTASRE);
-
-            socket.Connect(ip);
-
-            return socket;
+            oPC = iniciarPC("127.0.0.1");
+            Console.WriteLine("Ligação Bem sucedida.\n" +
+                "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.getRemoteEndPoint() + ".");
         }
 
         //Método porque PC é Rei, PC é Amor, PC é Deus.
@@ -88,6 +84,18 @@ namespace SCV
                 }
                 return iniciarPC(ip);
             }
+        }
+
+        //Método de conecção com o SRE
+        static Socket conectar(String ipStr)
+        {
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPAddress ipad = IPAddress.Parse(ipStr);
+            IPEndPoint ip = new IPEndPoint(ipad, PORTASRE);
+
+            socket.Connect(ip);
+
+            return socket;
         }
 
         //Método de incrementação de votos de partido
@@ -111,6 +119,7 @@ namespace SCV
         {
             nmrVotosBrancos++;
         }
+
         //Método para guardar o backup dos votos.
         private static void guardarBackup()
         {
@@ -139,14 +148,6 @@ namespace SCV
             nmrPartidos = contagemVotos.Length;
         }
 
-        //Método para estabelecer ligacao ao SRE.
-        private static void estabelecerLigacaoSRE()
-        {
-            oPC = iniciarPC("127.0.0.1");
-            Console.WriteLine("Ligação Bem sucedida.\n" +
-                "Conectado ao Servidor de Recenseamento Eleitoral em " + oPC.remoteEndPoint() + ".");
-        }
-
         //Eu preciso de um TRV, eu estou à espera de um TRV pelo fim da noite.
         private static void esperandoPorUmTRV()
         {
@@ -155,7 +156,8 @@ namespace SCV
             serverSocket.Bind(ip);
             serverSocket.Listen(10);
         }
-        //Método que faz todas as 
+
+        //Método que aceita e distribui TRVs por threads.
         private static void aceitarTRVs(){
             while (true)
             {
@@ -167,6 +169,7 @@ namespace SCV
                 Console.WriteLine("Cliente recebido.");
             }
         }
+
         //Classe das operações do TRV.
         private class handleTRV
         {
