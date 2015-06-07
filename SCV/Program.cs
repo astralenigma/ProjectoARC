@@ -107,7 +107,7 @@ namespace SCV
             }
             else
             {
-                contagemVotos[partido]++;
+                contagemVotos[partido-1]++;
             }
             //Gravar o voto, para o caso da energia falhar.
             guardarBackup();
