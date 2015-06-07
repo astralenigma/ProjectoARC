@@ -64,6 +64,11 @@ namespace BibliotecaDeClasses
             return socket.RemoteEndPoint;
         }
 
+        public void setSocket(Socket socket)
+        {
+            this.socket = socket;
+        }
+
         public string getOwnIP()
         {
             IPHostEntry host= Dns.GetHostEntry(Dns.GetHostName());
