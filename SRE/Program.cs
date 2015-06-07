@@ -98,19 +98,17 @@ namespace SRE
         }
 
         //Método que espera pelas ligações.
-        static Socket esperandoLigacao()
+        static void esperandoLigacao()
         {
             Console.WriteLine("O IP do servidor é "+oPC.getOwnIP()+" .");
             Console.WriteLine("Esperando por conecção...");
-            Socket socket2 = socket.Accept();
+            oPC.setSocket(socket.Accept());
 
-            EndPoint ipep = socket2.RemoteEndPoint;
-            Console.WriteLine("Cliente " + ipep + " Connectado.\n");
-            return socket2;
+            Console.WriteLine("Cliente " + oPC.getRemoteEndPoint() + " Connectado.\n");
         }
 
         //Método de receber o BI para confirmação
-        static void confirmacaoBIconeccao(Socket socket)
+        static void confirmacaoBIconeccao()
         {
             byte[] data = new byte[1024];
             try
@@ -131,7 +129,6 @@ namespace SRE
                         Console.WriteLine("BI Nao Encontrado");//check
                         break;
                 }
-                socket.Send(data);
             }
             catch (SocketException ex)
             {
@@ -144,20 +141,20 @@ namespace SRE
         }
 
         //Método do ciclo da recepção das mensagens.
-        static void receberBIConeccaoCiclo(Socket socket)
+        static void receberBIConeccaoCiclo()
         {
             do
             {
-                confirmacaoBIconeccao(socket);
-            } while (socket.Connected); //This will never happen due to circunstances completely outside my power and knowledge.
-            Console.WriteLine("Cliente " + socket.RemoteEndPoint + " disconectado.\n");
+                confirmacaoBIconeccao();
+            } while (oPC.getSocket().Connected); //This will never happen due to circunstances completely outside my power and knowledge.
+            Console.WriteLine("Cliente " + oPC.getRemoteEndPoint() + " disconectado.\n");
         }
 
         //Método para estabelecer e restabelecer a connecção.
         static void estabelecerConeccao()
         {
-            Socket socket = esperandoLigacao();
-            receberBIConeccaoCiclo(socket);
+            esperandoLigacao();
+            receberBIConeccaoCiclo();
         }
     }
 }
