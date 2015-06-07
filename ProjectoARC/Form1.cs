@@ -8,6 +8,7 @@ namespace ProjectoARC
     {
         Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         ProcessosComunicacao oPC;
+        const int PORTASCV = 8888;
         public Form1()
         {
             InitializeComponent();
@@ -30,7 +31,6 @@ namespace ProjectoARC
             //Apagar o input e mostrar o resultado.
 
             limparCampos();
-            //Uso duvidoso do operador NOT. Pelo menos ele não está a usar um método toggle. Esquece.
             toggleVisibilidade();
             }
             catch (SocketException ex)
@@ -105,7 +105,7 @@ namespace ProjectoARC
         {
             try
             {
-                clientSocket.Connect("127.0.0.1", 8888);
+                clientSocket.Connect("127.0.0.1", PORTASCV);
                 int nmrPartidos = Convert.ToInt32(oPC.receberMensagem());
                 inicializacaoDosPartidos(nmrPartidos);
             }
