@@ -188,7 +188,7 @@ namespace SCV
             private void doVoto()
             {
 
-                Boolean erro = false;
+                //Boolean erro = false;
                 try
                 {
                     do
@@ -196,8 +196,8 @@ namespace SCV
                         String[] mensagem = cliPC.receberMensagem().Split(' ');
 
                         srePC.enviarMensagem(mensagem[0]);
-                        erro = accaoDependeSRE(srePC.receberMensagem(),mensagem[1]);
-                    } while (erro);
+                        /*erro =*/ accaoDependeSRE(srePC.receberMensagem(),mensagem[1]);
+                    } while (true);
 
                 }
                 catch (TRVCaiuException)
