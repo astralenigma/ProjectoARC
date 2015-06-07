@@ -59,7 +59,7 @@ namespace BibliotecaDeClasses
             return mensagemRecebida;
         }
 
-        public EndPoint remoteEndPoint()
+        public EndPoint getRemoteEndPoint()
         {
             return socket.RemoteEndPoint;
         }
