@@ -26,7 +26,7 @@ namespace SRE
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, 6000);
             socket.Bind(ip);
             socket.Listen(10);
-            oPC=new ProcessosComunicacao(socket);
+            oPC = new ProcessosComunicacao(socket);
         }
 
         //Método que Lê o ficheiro de texto.
@@ -67,7 +67,14 @@ namespace SRE
                 }
                 else
                 {
-                    texto += separador[1];
+                    if (separador.Length < 2)
+                    {
+                        texto += 0;
+                    }
+                    else
+                    {
+                        texto += separador[1];
+                    }
                 }
                 texto += "\n";
             }
@@ -100,7 +107,7 @@ namespace SRE
         //Método que espera pelas ligações.
         static void esperandoLigacao()
         {
-            Console.WriteLine("O IP do servidor é "+oPC.getOwnIP()+" .");
+            Console.WriteLine("O IP do servidor é " + oPC.getOwnIP() + " .");
             Console.WriteLine("Esperando por conecção...");
             oPC.setSocket(socket.Accept());
 
